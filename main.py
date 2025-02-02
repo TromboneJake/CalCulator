@@ -30,10 +30,11 @@ from PyQt6.QtWidgets import (
     QFormLayout,
     QGraphicsOpacityEffect,
     QHeaderView,
+    QDateEdit,
 )
 from PyQt6 import QtGui
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QDate
 from calculate import (
     calculate_caloric_needs,
     import_csv_to_db,
@@ -42,6 +43,7 @@ from calculate import (
     weight_entry,
     get_view_data,
     get_trend_data,
+    delete_entry,
 )
 
 PERIOD_DAYS = {
@@ -463,9 +465,20 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(table_widget, period)
 
         self.clear_info_widget()
-
         self.info_layout.addWidget(self.tab_widget)
         self.update_tab_view_data(0)
+        
+        # Add date picker and delete button to the View Data tab
+        self.date_picker = QDateEdit(calendarPopup=True)
+        self.date_picker.setDate(QDate.currentDate())
+        self.info_layout.addWidget(self.date_picker)
+
+        self.delete_entry_button = QPushButton("Delete Entry")
+        self.delete_entry_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.delete_entry_button.clicked.connect(lambda: delete_entry(self, self.date_picker.date().toString("yyyy-MM-dd")))
+        self.info_layout.addWidget(self.delete_entry_button)
+        
+
 
     def clear_info_widget(self):
         """

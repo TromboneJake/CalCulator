@@ -50,7 +50,7 @@ class LoginWindow(QMainWindow):
 
         self.conn = sqlite3.connect(db_file)
         create_tables(self.conn)
-
+        
         self.register_window = None
         self.main_window = None
         self.init_ui()

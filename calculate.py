@@ -361,6 +361,12 @@ def weight_entry(self, selected_date, weight, calories):
         # """, (self.user_id, selected_date, calories))
         # self.conn.commit()
 
+        # Parse and format the date to ensure it's in the correct format
+        try:
+            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+        except ValueError:
+            raise ValueError("Incorrect date format, should be YYYY-MM-DD")
+
         # Check if an entry for the specified date already exists
         weight_entry = cursor.execute(
             """
@@ -471,3 +477,36 @@ def get_view_data(self, period_days):
 
         data = cursor.fetchall()
         return data
+
+def delete_entry(self, selected_date):
+        """
+        Deletes an entry for the selected date.
+        """
+        cursor = self.conn.cursor()
+
+        # Check if an entry for the specified date exists
+        weight_entry = cursor.execute(
+            "SELECT weight FROM weights WHERE user_id = ? AND date = ?",
+            (self.user_id, selected_date)
+        ).fetchone()
+
+        calorie_entry = cursor.execute(
+            "SELECT calories FROM calories WHERE user_id = ? AND date = ?",
+            (self.user_id, selected_date)
+        ).fetchone()
+
+        if weight_entry or calorie_entry:
+            cursor.execute(
+                "DELETE FROM weights WHERE user_id = ? AND date = ?",
+                (self.user_id, selected_date)
+            )
+            cursor.execute(
+                "DELETE FROM calories WHERE user_id = ? AND date = ?",
+                (self.user_id, selected_date)
+            )
+            self.conn.commit()
+            QMessageBox.information(self, "Success", f"Entry for {selected_date} deleted successfully.")
+        else:
+            QMessageBox.warning(self, "Error", f"No entry found for {selected_date}.")
+
+        cursor.close()
