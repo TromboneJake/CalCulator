@@ -2,6 +2,9 @@
 
 CalCulator is a PyQt6-based GUI application for calorie and weight data tracking. It allows users to create accounts, log in, enter their weight and calorie data, view trends, and calculate their caloric needs.
 
+<img alt="Trends screen of the CalCulator app"  src=https://github.com/user-attachments/assets/08c3fcb4-828c-40e6-aff5-7f78314cd6f0 title="CalCulator, Trends screen" width=70%/>
+
+
 ## Features
 
 - User registration and login
